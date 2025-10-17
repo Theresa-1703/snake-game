@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Schöne Scrollbar (nur moderne Browser) */
 * {
   scrollbar-width: thin;
   scrollbar-color: rgba(148,163,184,0.4) transparent;
@@ -12,4 +11,3 @@
 *::-webkit-scrollbar-thumb { background-color: rgba(148,163,184,0.4); border-radius: 8px; }
 
 html, body, #root { height: 100%; }
-

@@ -13,7 +13,7 @@ export default function App() {
   const onRestart = () => { setRestartSig(s => s + 1) }
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="h-[100dvh] grid grid-rows-[auto,1fr,auto]">{/* Full-viewport Layout ohne Scroll */}
       <header className="p-6">
         <div className="max-w-5xl mx-auto flex items-center justify-between">
           <h1 className="text-3xl font-bold tracking-tight">
@@ -23,9 +23,9 @@ export default function App() {
         </div>
       </header>
 
-      <main className="flex-1 pb-10">
-        <div className="max-w-5xl mx-auto px-6 grid lg:grid-cols-[1fr_320px] gap-6">
-          <div className="relative w-full h-[60vh] md:h-[70vh] lg:h-[75vh]">
+      <main className="min-h-0 overflow-hidden">
+        <div className="max-w-5xl mx-auto px-6 grid lg:grid-cols-[1fr_320px] gap-6 h-full box-border pb-4">
+          <div className="relative w-full min-h-0 h-[55vh] sm:h-[60vh] md:h-[70vh] lg:h-full">
             <SnakeCanvas
               cols={size}
               rows={size}
@@ -37,7 +37,7 @@ export default function App() {
             />
           </div>
 
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4 min-h-0 overflow-auto">{/* rechter Bereich kann bei kleinem Viewport intern scrollen */}
             <div className="flex flex-col gap-3">
               <button
                 type="button"
