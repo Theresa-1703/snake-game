@@ -27,7 +27,7 @@ export default function App() {
 
       <main className="flex-1 pb-10">
         <div className="max-w-5xl mx-auto px-6 grid lg:grid-cols-[1fr_320px] gap-6">
-          <div className="relative rounded-2xl bg-white/5 shadow-glass backdrop-blur-md ring-1 ring-white/10 p-4">
+          <div className="relative">
             <SnakeCanvas
               key={key}
               cols={cols}

@@ -254,8 +254,8 @@ export default function SnakeCanvas({ cols, rows, wrap, speed, pauseSignal, rest
   }, [isPaused, onPauseChange])
 
   return (
-    <div ref={containerRef} className="relative w-full aspect-square md:aspect-[4/3] mx-auto">
-      <canvas ref={canvasRef} className="block w-full h-full rounded-xl ring-1 ring-white/10 shadow-lg"/>
+    <div ref={containerRef} className="relative w-full aspect-square md:aspect-[4/3] mx-auto flex items-center justify-center">
+      <canvas ref={canvasRef} className="block"/>
     </div>
   )
 }
