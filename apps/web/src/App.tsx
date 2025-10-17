@@ -3,8 +3,7 @@ import SnakeCanvas from './components/SnakeCanvas'
 
 export default function App() {
   const [wrap, setWrap] = useState(true)
-  const [cols, setCols] = useState(24)
-  const [rows, setRows] = useState(24)
+  const [size, setSize] = useState(24)
   const [speed, setSpeed] = useState(10) // ticks per second
   const [pauseSig, setPauseSig] = useState(0)
   const [restartSig, setRestartSig] = useState(0)
@@ -28,8 +27,8 @@ export default function App() {
         <div className="max-w-5xl mx-auto px-6 grid lg:grid-cols-[1fr_320px] gap-6">
           <div className="relative w-full h-[60vh] md:h-[70vh] lg:h-[75vh]">
             <SnakeCanvas
-              cols={cols}
-              rows={rows}
+              cols={size}
+              rows={size}
               wrap={wrap}
               speed={speed}
               pauseSignal={pauseSig}
@@ -71,18 +70,12 @@ export default function App() {
 
                 <div>
                   <label className="text-sm text-slate-300">Geschwindigkeit: <b>{(speed < 1 ? speed.toFixed(1) : speed)}</b></label>
-                  <input className="w-full" type="range" min={1} max={15} step={1} value={speed} onChange={e => setSpeed(Number(e.target.value))} />
+                  <input className="w-full" type="range" min={1} max={30} step={1} value={speed} onChange={e => setSpeed(Number(e.target.value))} />
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-sm text-slate-300">Spalten: <b>{cols}</b></label>
-                    <input className="w-full" type="range" min={12} max={40} step={2} value={cols} onChange={e => setCols(Number(e.target.value))} />
-                  </div>
-                  <div>
-                    <label className="text-sm text-slate-300">Zeilen: <b>{rows}</b></label>
-                    <input className="w-full" type="range" min={12} max={40} step={2} value={rows} onChange={e => setRows(Number(e.target.value))} />
-                  </div>
+                <div>
+                  <label className="text-sm text-slate-300">Spielfeldgröße: <b>{size} × {size}</b></label>
+                  <input className="w-full" type="range" min={20} max={40} step={1} value={size} onChange={e => setSize(Number(e.target.value))} />
                 </div>
 
                 <div className="text-xs text-slate-400 pt-2">
