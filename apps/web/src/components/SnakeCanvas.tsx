@@ -110,14 +110,14 @@ export default function SnakeCanvas({ cols, rows, wrap, speed }: Props) {
 
   // Rendering with requestAnimationFrame
   useEffect(() => {
-    const canvas = canvasRef.current
-    if (!canvas) return
-    const ctx = canvas.getContext('2d')! // non-null assertion for TS
+    const canvasEl = canvasRef.current! // non-null
+    if (!canvasEl) return
+    const ctx = canvasEl.getContext('2d')! // non-null assertion for TS
 
     function draw() {
       const pr = pixelRatioRef.current
-      const w = canvas.width
-      const h = canvas.height
+      const w = canvasEl.width
+      const h = canvasEl.height
       const cellW = w / cols
       const cellH = h / rows
 
