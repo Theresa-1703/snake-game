@@ -59,6 +59,3 @@ npm run -w @snake/web preview
 ├─ tsconfig.base.json # shared TS base config
 └─ README.md
 ```
-
-## Lizenz
-MIT
