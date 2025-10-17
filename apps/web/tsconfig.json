@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "types": ["vite/client"],
+    "baseUrl": ".",
+    "paths": {
+      "@snake/game-core": ["../../packages/game-core/src"]
+    }
+  },
+  "include": ["src", "vite.config.ts"]
+}
