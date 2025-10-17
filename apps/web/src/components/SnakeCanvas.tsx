@@ -7,6 +7,9 @@ type Props = {
   rows: number
   wrap: boolean
   speed: number // ticks per second
+  pauseSignal?: number
+  restartSignal?: number
+  onPauseChange?: (paused: boolean) => void
 }
 
 const dirByKey: Record<string, Direction | 'pause' | 'restart' | undefined> = {
@@ -22,7 +25,7 @@ const dirByKey: Record<string, Direction | 'pause' | 'restart' | undefined> = {
   r: 'restart', R: 'restart',
 }
 
-export default function SnakeCanvas({ cols, rows, wrap, speed }: Props) {
+export default function SnakeCanvas({ cols, rows, wrap, speed, pauseSignal, restartSignal, onPauseChange }: Props) {
   const config: GameConfig = useMemo(() => ({ cols, rows, wrap, initialLength: 5 }), [cols, rows, wrap])
   const [state, setState] = useState<GameState>(() => createInitialState(config))
   const [isPaused, setPaused] = useState(false)
@@ -31,6 +34,10 @@ export default function SnakeCanvas({ cols, rows, wrap, speed }: Props) {
   const rafRef = useRef<number | null>(null)
   const intervalRef = useRef<number | null>(null)
   const pixelRatioRef = useRef<number>(1)
+
+  // Signals aus dem Parent deduplizieren
+  const lastPauseSignalRef = useRef<number | undefined>(pauseSignal)
+  const lastRestartSignalRef = useRef<number | undefined>(restartSignal)
 
   // Restart when config changes (parent provides key but we guard too)
   useEffect(() => {
@@ -62,6 +69,25 @@ export default function SnakeCanvas({ cols, rows, wrap, speed }: Props) {
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
   }, [config])
+
+  // Externe Steuerung: Pause toggeln
+  useEffect(() => {
+    if (pauseSignal === undefined) return
+    if (lastPauseSignalRef.current !== pauseSignal) {
+      setPaused(p => !p)
+      lastPauseSignalRef.current = pauseSignal
+    }
+  }, [pauseSignal])
+
+  // Externe Steuerung: Neustart
+  useEffect(() => {
+    if (restartSignal === undefined) return
+    if (lastRestartSignalRef.current !== restartSignal) {
+      setState(createInitialState(config))
+      setPaused(false)
+      lastRestartSignalRef.current = restartSignal
+    }
+  }, [restartSignal, config])
 
   // Game loop (logic) via setInterval
   useEffect(() => {
@@ -222,24 +248,14 @@ export default function SnakeCanvas({ cols, rows, wrap, speed }: Props) {
     }
   }, [cols, rows, state, isPaused])
 
-  const onRestart = () => {
-    setState(createInitialState(config))
-    setPaused(false)
-  }
-  const onPauseToggle = () => setPaused(p => !p)
+  // Parent über Pausenstatus informieren
+  useEffect(() => {
+    onPauseChange?.(isPaused)
+  }, [isPaused, onPauseChange])
 
   return (
     <div ref={containerRef} className="relative w-full aspect-square md:aspect-[4/3] mx-auto">
       <canvas ref={canvasRef} className="block w-full h-full rounded-xl ring-1 ring-white/10 shadow-lg"/>
-
-      <div className="pointer-events-none absolute inset-0 flex items-start justify-end p-3 gap-2">
-        <button onClick={onPauseToggle} className="pointer-events-auto bg-white/10 hover:bg-white/15 text-white/90 text-xs px-3 py-1.5 rounded-md ring-1 ring-white/15 transition">
-          {isPaused ? 'Fortsetzen' : 'Pause'}
-        </button>
-        <button onClick={onRestart} className="pointer-events-auto bg-white/10 hover:bg-white/15 text-white/90 text-xs px-3 py-1.5 rounded-md ring-1 ring-white/15 transition">
-          Neustart
-        </button>
-      </div>
     </div>
   )
 }
