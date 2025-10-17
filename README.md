@@ -5,7 +5,7 @@
 
 ---
 
-# Snake Monorepo
+# Snake Game
 
 Ein modernes Monorepo mit:
 - apps/web: React + Vite + TypeScript + Tailwind (UI)
