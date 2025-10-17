@@ -70,8 +70,8 @@ export default function App() {
                 </div>
 
                 <div>
-                  <label className="text-sm text-slate-300">Geschwindigkeit: <b>{speed}</b></label>
-                  <input className="w-full" type="range" min={5} max={20} step={1} value={speed} onChange={e => setSpeed(Number(e.target.value))} />
+                  <label className="text-sm text-slate-300">Geschwindigkeit: <b>{(speed < 1 ? speed.toFixed(1) : speed)}</b></label>
+                  <input className="w-full" type="range" min={1} max={15} step={1} value={speed} onChange={e => setSpeed(Number(e.target.value))} />
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
