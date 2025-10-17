@@ -1,3 +1,10 @@
+> Hinweis:
+> Dieses Projekt wurde als Experiment mittels „Vibecoding“ mit GitHub Copilot umgesetzt, um die Zusammenarbeit mit KI über den gesamten Entwicklungsablauf zu evaluieren. 
+> Ziel war es, Architektur- und Technologieentscheidungen, Produktivität und Codequalität in einem realistischen Monorepo-Setup zu prüfen. 
+
+
+---
+
 # Snake Monorepo
 
 Ein modernes Monorepo mit:
@@ -50,4 +57,3 @@ npm run -w @snake/web preview
 
 ## Lizenz
 MIT
-
