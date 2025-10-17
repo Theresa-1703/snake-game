@@ -39,11 +39,15 @@ export default function SnakeCanvas({ cols, rows, wrap, speed, pauseSignal, rest
   const lastPauseSignalRef = useRef<number | undefined>(pauseSignal)
   const lastRestartSignalRef = useRef<number | undefined>(restartSignal)
 
-  // Restart when config changes (parent provides key but we guard too)
+  // Nur bei Änderung der Grid-Dimensionen neu initialisieren (cols/rows), NICHT bei wrap
+  const lastGridRef = useRef<{cols: number; rows: number}>({ cols, rows })
   useEffect(() => {
-    setState(createInitialState(config))
-    setPaused(false)
-  }, [config])
+    const last = lastGridRef.current
+    if (last.cols !== cols || last.rows !== rows) {
+      setState(createInitialState({ cols, rows, wrap, initialLength: 5 }))
+    }
+    lastGridRef.current = { cols, rows }
+  }, [cols, rows, wrap])
 
   // Keyboard controls
   useEffect(() => {
@@ -56,7 +60,7 @@ export default function SnakeCanvas({ cols, rows, wrap, speed, pauseSignal, rest
         return
       }
       if (m === 'restart') {
-        setState(createInitialState(config))
+        setState(createInitialState({ cols, rows, wrap, initialLength: 5 }))
         setPaused(false)
         return
       }
@@ -68,7 +72,7 @@ export default function SnakeCanvas({ cols, rows, wrap, speed, pauseSignal, rest
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [config])
+  }, [cols, rows, wrap])
 
   // Externe Steuerung: Pause toggeln
   useEffect(() => {
@@ -83,11 +87,11 @@ export default function SnakeCanvas({ cols, rows, wrap, speed, pauseSignal, rest
   useEffect(() => {
     if (restartSignal === undefined) return
     if (lastRestartSignalRef.current !== restartSignal) {
-      setState(createInitialState(config))
+      setState(createInitialState({ cols, rows, wrap, initialLength: 5 }))
       setPaused(false)
       lastRestartSignalRef.current = restartSignal
     }
-  }, [restartSignal, config])
+  }, [restartSignal, cols, rows, wrap])
 
   // Game loop (logic) via setInterval
   useEffect(() => {
@@ -98,16 +102,16 @@ export default function SnakeCanvas({ cols, rows, wrap, speed, pauseSignal, rest
     if (isPaused) return
     const ms = Math.max(30, Math.floor(1000 / speed))
     const id = window.setInterval(() => {
-      setState(prev => step(config, prev))
+      setState(prev => step({ cols, rows, wrap }, prev))
     }, ms)
     intervalRef.current = id
     return () => {
       if (intervalRef.current) window.clearInterval(intervalRef.current)
       intervalRef.current = null
     }
-  }, [config, speed, isPaused])
+  }, [cols, rows, wrap, speed, isPaused])
 
-  // Resize canvas to fit container while keeping cell aspect 1:1
+  // Resize canvas: volle Containergröße
   const resizeCanvas = useCallback(() => {
     const canvas = canvasRef.current
     const container = containerRef.current
@@ -117,15 +121,11 @@ export default function SnakeCanvas({ cols, rows, wrap, speed, pauseSignal, rest
     pixelRatioRef.current = pr
 
     const { clientWidth, clientHeight } = container
-    const cellSize = Math.floor(Math.min(clientWidth / cols, clientHeight / rows))
-    const width = cellSize * cols
-    const height = cellSize * rows
-
-    canvas.style.width = width + 'px'
-    canvas.style.height = height + 'px'
-    canvas.width = Math.floor(width * pr)
-    canvas.height = Math.floor(height * pr)
-  }, [cols, rows])
+    canvas.style.width = clientWidth + 'px'
+    canvas.style.height = clientHeight + 'px'
+    canvas.width = Math.max(1, Math.floor(clientWidth * pr))
+    canvas.height = Math.max(1, Math.floor(clientHeight * pr))
+  }, [])
 
   useEffect(() => {
     resizeCanvas()
@@ -136,9 +136,9 @@ export default function SnakeCanvas({ cols, rows, wrap, speed, pauseSignal, rest
 
   // Rendering with requestAnimationFrame
   useEffect(() => {
-    const canvasEl = canvasRef.current! // non-null
+    const canvasEl = canvasRef.current!
     if (!canvasEl) return
-    const ctx = canvasEl.getContext('2d')! // non-null assertion for TS
+    const ctx = canvasEl.getContext('2d')!
 
     function draw() {
       const pr = pixelRatioRef.current
@@ -246,7 +246,7 @@ export default function SnakeCanvas({ cols, rows, wrap, speed, pauseSignal, rest
       if (rafRef.current) cancelAnimationFrame(rafRef.current)
       rafRef.current = null
     }
-  }, [cols, rows, state, isPaused])
+  }, [cols, rows, wrap, state, isPaused])
 
   // Parent über Pausenstatus informieren
   useEffect(() => {
@@ -254,7 +254,7 @@ export default function SnakeCanvas({ cols, rows, wrap, speed, pauseSignal, rest
   }, [isPaused, onPauseChange])
 
   return (
-    <div ref={containerRef} className="relative w-full aspect-square md:aspect-[4/3] mx-auto flex items-center justify-center">
+    <div ref={containerRef} className="relative w-full h-full flex items-center justify-center">
       <canvas ref={canvasRef} className="block"/>
     </div>
   )

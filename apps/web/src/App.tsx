@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import SnakeCanvas from './components/SnakeCanvas'
 
 export default function App() {
@@ -9,7 +9,6 @@ export default function App() {
   const [pauseSig, setPauseSig] = useState(0)
   const [restartSig, setRestartSig] = useState(0)
   const [pausedLabel, setPausedLabel] = useState(false)
-  const key = useMemo(() => `${cols}x${rows}-${wrap}`, [cols, rows, wrap])
 
   const onPauseToggle = () => { setPauseSig(s => s + 1) }
   const onRestart = () => { setRestartSig(s => s + 1) }
@@ -27,9 +26,8 @@ export default function App() {
 
       <main className="flex-1 pb-10">
         <div className="max-w-5xl mx-auto px-6 grid lg:grid-cols-[1fr_320px] gap-6">
-          <div className="relative">
+          <div className="relative w-full h-[60vh] md:h-[70vh] lg:h-[75vh]">
             <SnakeCanvas
-              key={key}
               cols={cols}
               rows={rows}
               wrap={wrap}
@@ -65,7 +63,7 @@ export default function App() {
               <div className="space-y-5">
                 <div>
                   <label className="flex items-center justify-between">
-                    <span>Wände umwickeln</span>
+                    <span>Wände umgehen</span>
                     <input type="checkbox" className="size-4 accent-primary-500" checked={wrap} onChange={e => setWrap(e.target.checked)} />
                   </label>
                   <p className="text-xs text-slate-400 mt-1">Wenn aktiv, taucht die Schlange auf der gegenüberliegenden Seite wieder auf.</p>
@@ -96,7 +94,6 @@ export default function App() {
         </div>
       </main>
 
-      {/* Neuer Footer im professionellen Stil */}
       <footer className="border-t border-white/10">
         <div className="max-w-5xl mx-auto px-6 py-6 flex flex-col sm:flex-row items-center justify-between text-slate-400 text-sm">
           <p>© {new Date().getFullYear()} Snake. Alle Rechte vorbehalten.</p>
