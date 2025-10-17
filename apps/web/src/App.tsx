@@ -4,7 +4,7 @@ import SnakeCanvas from './components/SnakeCanvas'
 export default function App() {
   const [wrap, setWrap] = useState(true)
   const [size, setSize] = useState(24)
-  const [speed, setSpeed] = useState(10) // ticks per second
+  const [speed, setSpeed] = useState(10)
   const [pauseSig, setPauseSig] = useState(0)
   const [restartSig, setRestartSig] = useState(0)
   const [pausedLabel, setPausedLabel] = useState(false)
@@ -38,7 +38,6 @@ export default function App() {
           </div>
 
           <div className="flex flex-col gap-4">
-            {/* Buttons: volle Spaltenbreite, untereinander, größer */}
             <div className="flex flex-col gap-3">
               <button
                 type="button"
@@ -70,12 +69,12 @@ export default function App() {
 
                 <div>
                   <label className="text-sm text-slate-300">Geschwindigkeit: <b>{(speed < 1 ? speed.toFixed(1) : speed)}</b></label>
-                  <input className="w-full" type="range" min={1} max={30} step={1} value={speed} onChange={e => setSpeed(Number(e.target.value))} />
+                  <input className="w-full" type="range" min={1} max={20} step={1} value={speed} onChange={e => setSpeed(Number(e.target.value))} />
                 </div>
 
                 <div>
                   <label className="text-sm text-slate-300">Spielfeldgröße: <b>{size} × {size}</b></label>
-                  <input className="w-full" type="range" min={20} max={40} step={1} value={size} onChange={e => setSize(Number(e.target.value))} />
+                  <input className="w-full" type="range" min={20} max={50} step={2} value={size} onChange={e => setSize(Number(e.target.value))} />
                 </div>
 
                 <div className="text-xs text-slate-400 pt-2">
