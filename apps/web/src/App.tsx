@@ -41,11 +41,20 @@ export default function App() {
           </div>
 
           <div className="flex flex-col gap-4">
-            <div className="flex justify-end gap-2">
-              <button type="button" onClick={onPauseToggle} className="bg-white/10 hover:bg-white/15 text-white/90 text-xs px-3 py-1.5 rounded-md ring-1 ring-white/15 transition">
+            {/* Buttons: volle Spaltenbreite, untereinander, größer */}
+            <div className="flex flex-col gap-3">
+              <button
+                type="button"
+                onClick={onPauseToggle}
+                className={`w-full h-12 rounded-lg ring-1 ring-white/15 bg-white/10 hover:bg-white/15 text-white/90 transition whitespace-nowrap ${pausedLabel ? 'text-sm' : 'text-base'}`}
+              >
                 {pausedLabel ? 'Fortsetzen' : 'Pause'}
               </button>
-              <button type="button" onClick={onRestart} className="bg-white/10 hover:bg-white/15 text-white/90 text-xs px-3 py-1.5 rounded-md ring-1 ring-white/15 transition">
+              <button
+                type="button"
+                onClick={onRestart}
+                className="w-full h-12 rounded-lg ring-1 ring-white/15 bg-white/10 hover:bg-white/15 text-white/90 transition text-base"
+              >
                 Neustart
               </button>
             </div>
